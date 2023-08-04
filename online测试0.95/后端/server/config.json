@@ -1,0 +1,14 @@
+{
+    "mysql": {
+        "host": "localhost",
+        "user": "ceshi",
+        "password": "jEDCKwmZaGGiraM3",
+        "database": "temp",
+        "port": "3306"
+    },
+    "game": {
+        "rankLimt": 20,
+        "notice": "欢迎来到神的虚无注意，我是作者陈安，我只想说：我不是针对各位，在座的各位都是垃（le）圾（se）！",
+        "version": "11451401"
+    }
+}

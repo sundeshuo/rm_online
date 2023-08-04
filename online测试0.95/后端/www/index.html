@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="icon.png" rel="icon" type="type" />
+    <title>RPG MAKER MZ 天下第一</title>
+    <script type="text/javascript">
+        let id = 2;
+        sunadd = () => {
+            const order = "物品" + id + ": ";
+            const div = document.createElement("div");
+            div.className = "content";
+            const sel = document.createElement("select");
+            const form = document.getElementById("form");
+            const hr = document.getElementById("sun");
+            sel.name = "type";
+            const opt1 = document.createElement("option");
+            opt1.value = "item";
+            const opt2 = document.createElement("option");
+            opt2.value = "weapon";
+            const opt3 = document.createElement("option");
+            opt3.value = "armor";
+            const input1 = document.createElement("input");
+            input1.name = "itemId";
+            input1.className = "itemid";
+            const input2 = document.createElement("input");
+            input2.name = "amount";
+            input2.className = "amount";
+            const txt1 = document.createTextNode(order);
+            const txt2 = document.createTextNode(" 物品ID: ");
+            const txt3 = document.createTextNode(" 数量: ");
+            const txt4 = document.createTextNode("道具");
+            const txt5 = document.createTextNode("武器");
+            const txt6 = document.createTextNode("防具");
+            opt1.appendChild(txt4);
+            opt2.appendChild(txt5);
+            opt3.appendChild(txt6);
+            sel.appendChild(opt1);
+            sel.appendChild(opt2);
+            sel.appendChild(opt3);
+            div.appendChild(txt1);
+            div.appendChild(sel);
+            div.appendChild(txt2);
+            div.appendChild(input1);
+            div.appendChild(txt3);
+            div.appendChild(input2);
+            form.appendChild(div);
+            // form.insertBefore(hr, div);
+            id++;
+        }
+        submitData = () => {
+            if (inspect() == false) return;
+            const data = {};
+            data.item = [];
+            const container = document.getElementsByClassName("content");
+            data.password = document.getElementById("password").value;
+            data.cdk = document.getElementById("cdk").value;
+            data.uid = document.getElementById("uid").value;
+            data.times = document.getElementById("times").value;
+            //处理内容数据
+            for (let item of container) {
+                const itemData = {};
+                itemData.type = item.getElementsByTagName("select")[0].value;
+                itemData.id = item.getElementsByClassName("itemid")[0].value;
+                itemData.amount = item.getElementsByClassName("amount")[0].value;
+                data.item.push(itemData);
+
+            }
+            sendData(data);
+
+        }
+
+        sendData = (data) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("post", "/GM");
+            xhr.setRequestHeader("Content-type", "application/json");
+            console.log(data);
+            xhr.send(JSON.stringify(data));
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        alert(xhr.responseText);
+                    }
+                    else {
+                        alert("错误:" + xhr.status);
+                    }
+                }
+            }
+        }
+
+        inspect = () => {
+            if (form.CDK.value == "") {
+                alert('CDK不能为空!');
+                return false;
+            }
+            if (form.UID.value == "") {
+                alert('UID不能为空!');
+                return false;
+            }
+            if (form.times.value == "") {
+                alert('可兑换次数不能为空!');
+                return false;
+            }
+        }
+
+        del = () => {
+
+        }
+    </script>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url(./splash_ch.png);
+            background-size: cover;
+            /* background-color: #bdc3c7; */
+        }
+
+        button {
+            margin: 0 auto;
+            width: 150px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            cursor: pointer;
+            user-select: none;
+            letter-spacing: 1rem;
+            text-indent: 1rem;
+            border-radius: 20px;
+            box-sizing: border-box;
+        }
+
+        .main {
+            margin: 0 auto;
+            width: 480px;
+            height: auto;
+            border-radius: 20px;
+            background-color: rgba(88, 86, 86, 0.85);
+            padding: 20px;
+            color: cyan;
+            cursor: url(./01_56.png), auto;
+        }
+
+        .itemid,
+        .amount {
+            width: 50px;
+        }
+
+        .twinkle {
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #2c3e50;
+            color: #2c3e50;
+            transition: background-color .2s;
+        }
+
+        .twinkle::before {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 200%;
+            background-color: rgba(255, 255, 255, .6);
+            transform: skew(45deg) translate3d(-200px, 0, 0);
+        }
+
+        .twinkle:hover {
+            background-color: #2c3e50;
+        }
+
+        .twinkle:hover::before {
+            transition: ease-in-out .5s;
+            transform: skew(45deg) translate3d(300px, 0, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <h1>礼包设置</h1>
+        <form id="form">
+            <div>
+                GM码:<br>
+                <input id="password" type="text" name="password"><br>
+                CDK:<br>
+                <input id="cdk" type="text" name="CDK">
+                <input type="button" value="删除CDK" onclick="del()"><br>
+                UID:<br>
+                <input id="uid" type="text" name="UID"><br>
+                可兑换次数:<br>
+                <input id="times" type="text" name="times">
+            </div>
+            <hr>
+            <div class="content">
+                物品1:
+                <select name="type">
+                    <option value="item">道具</option>
+                    <option value="weapon">武器</option>
+                    <option value="armor">防具</option>
+                </select>
+                物品ID:
+                <input class="itemid" type="text" name="itemId">
+                数量:
+                <input class="amount" type="text" name="amount">
+                <input type="button" value="增加物品" onclick="sunadd()">
+            </div>
+        </form>
+        <br>
+        <button class="twinkle" onclick="submitData()">提交</button>
+    </div>
+</body>
+
+</html>
